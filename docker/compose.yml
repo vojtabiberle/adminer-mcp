@@ -1,0 +1,32 @@
+# Test environment: Adminer 6.3.1 + PostgreSQL 17.
+# Start: docker compose -f docker/compose.yml up -d --build --wait
+# Adminer: http://127.0.0.1:8088/adminer.php (server "postgres")
+name: adminer-mcp-test
+
+services:
+  adminer:
+    build: ./adminer
+    ports:
+      - "127.0.0.1:8088:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/adminer.php"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres-test-pw
+      POSTGRES_DB: app
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "app"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
