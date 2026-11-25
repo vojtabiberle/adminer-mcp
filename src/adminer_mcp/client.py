@@ -94,7 +94,7 @@ class AdminerClient:
 
     def _reset_cookies(self) -> None:
         self._http.cookies.clear()
-        self._http.cookies.set("adminer_lang", "en")
+        self._http.cookies.set("adminer_lang", "en", domain=httpx.URL(self.profile.url).host)
         self._token = None
 
     async def _request(
