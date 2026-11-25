@@ -31,6 +31,10 @@ class PolicyError(AdminerMcpError):
     """The SQL classifier or the profile configuration rejected the request."""
 
 
+class AdminerPageError(AdminerMcpError):
+    """Adminer reported an error for the whole page (e.g. an unknown schema)."""
+
+
 class ProtocolError(AdminerMcpError):
     """Adminer returned a response that the parser does not understand."""
 
