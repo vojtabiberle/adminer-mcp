@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang='en' dir='ltr' class='ltr nojs'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login - postgres - Adminer</title>
+<link rel="stylesheet" href="adminer.php?file=default.css&amp;version=6.3.1+5c48c0d4">
+<link rel='stylesheet' media='(prefers-color-scheme: dark)' href='adminer.php?file=dark.css&amp;version=6.3.1+5c48c0d4'>
+<meta name='color-scheme' content='light dark'>
+<script src='adminer.php?file=functions.js&amp;version=6.3.1+5c48c0d4' nonce="YTFhNmRkNzIzNzVjNmJkM2RmODJmMTU3NzgyYTRkY2Q="></script>
+<link rel='icon' href='data:image/gif;base64,R0lGODlhEAAQAJEAAAQCBPz+/PwCBAROZCH5BAEAAAAALAAAAAAQABAAAAI2hI+pGO1rmghihiUdvUBnZ3XBQA7f05mOak1RWXrNq5nQWHMKvuoJ37BhVEEfYxQzHjWQ5qIAADs='>
+<link rel='apple-touch-icon' href='adminer.php?file=logo.svg&amp;version=6.3.1+5c48c0d4'>
+<link rel='manifest' href='adminer.php?manifest=' crossorigin='use-credentials'>
+
+<body class=' adminer'>
+<script nonce="YTFhNmRkNzIzNzVjNmJkM2RmODJmMTU3NzgyYTRkY2Q=">onload = partial(verifyVersion, '6.3.1');
+
+const offlineMessage = 'You are offline.';
+const numberFormat = '#,##0';
+const numberDigits = '0123456789';
+const urlSeparators = '&';</script>
+<div id='help' class='jush-pgsql jsonly hidden' data-onmouseover='helpKeep()' data-onmouseout='helpMouseout()'></div>
+<div id='content'>
+<span id='menuopen' class='jsonly' data-onclick='menuToggle()'><button title='Menu' class='icon icon-move' aria-expanded='false'></button></span>
+<h2>Login</h2>
+<div id='ajaxstatus' role='status' class='jsonly'></div>
+<div class='error'>Unable to connect to PostgreSQL server: connection to server at &quot;postgres&quot; (172.30.1.2), port 5432 failed: FATAL:  password authentication failed for user &quot;reader&quot;</div>
+<script nonce="YTFhNmRkNzIzNzVjNmJkM2RmODJmMTU3NzgyYTRkY2Q=">if (navigator.serviceWorker) {
+	navigator.serviceWorker.getRegistration().then(registration => registration && registration.unregister());
+	caches.keys().then(keys => keys.forEach(key => key.startsWith('adminer-') && caches.delete(key)));
+}</script>
+<form method='post'>
+<div><input type='hidden' name='token' value='5d055b540b5e5650050700090f520a075605575d01015b500005520052055454:8c9288e56cb1609f302d88bb157633e1'>
+</div>
+<table class='layout'>
+<tr><th>System<td><select name='auth[driver]' data-onchange='loginDriver()'><option value="server">MySQL / MariaDB<option value="pgsql" selected>PostgreSQL<option value="sqlite">SQLite<option value="mssql">MS SQL<option value="oracle">Oracle</select>
+<tr><th>Server<td><input name='auth[server]' value='postgres' title='hostname[:port] or :socket' placeholder='localhost' autocapitalize='off'>
+<tr><th>Username<td><input name="auth[username]" id="username" autofocus value="reader" autocomplete="username" autocapitalize="off"><script nonce="YTFhNmRkNzIzNzVjNmJkM2RmODJmMTU3NzgyYTRkY2Q=">fire(qs('#username').form['auth[driver]'], 'change');</script>
+
+<tr><th>Password<td><input type="password" name="auth[password]" autocomplete="current-password">
+<tr><th>Database<td><input name="auth[db]" value="app" autocapitalize="off">
+</table>
+<p><input type='submit' value='Login'>
+<label><input type='checkbox' name='auth[permanent]' value='1'>Permanent login</label>
+</form>
+</div>
+
+<div id='foot' class='foot'>
+<div id='menu'>
+<h1><a href='https://www.adminer.org/' target="_blank" rel="noreferrer noopener" id='h1'><img src='adminer.php?file=logo.svg&amp;version=6.3.1+5c48c0d4' width='24' height='24' alt='' id='logo'>Adminer</a> <span class='version'>6.3.1 <a href='https://www.adminer.org/#download' target="_blank" rel="noreferrer noopener" id='version'><noscript><iframe sandbox src='https://www.adminer.org/version/?current=6.3.1&amp;noscript=1'></iframe></noscript></a></span></h1>
+<form method='post'>
+<div id='lang'><label>Language: <select name='lang' data-onchange='formSubmit()'><option value="en" selected>English<option value="id">Bahasa Indonesia<option value="ms">Bahasa Melayu<option value="bs">Bosanski<option value="ca">Català<option value="cs">Čeština<option value="da">Dansk<option value="de">Deutsch<option value="et">Eesti<option value="es">Español<option value="fr">Français<option value="gl">Galego<option value="hr">Hrvatski<option value="it">Italiano<option value="lv">Latviešu<option value="lt">Lietuvių<option value="ro">Limba Română<option value="hu">Magyar<option value="nl">Nederlands<option value="no">Norsk<option value="uz">Oʻzbekcha<option value="pl">Polski<option value="pt">Português<option value="pt-br">Português (Brazil)<option value="sk">Slovenčina<option value="sl">Slovenski<option value="fi">Suomi<option value="sv">Svenska<option value="vi">Tiếng Việt<option value="tr">Türkçe<option value="bg">Български<option value="el">Ελληνικά<option value="ru">Русский<option value="sr">Српски<option value="uk">Українська<option value="he">עברית<option value="ar">العربية<option value="fa">فارسی<option value="hi">हिन्दी<option value="bn">বাংলা<option value="ta">த‌மிழ்<option value="th">ภาษาไทย<option value="ka">ქართული<option value="ja">日本語<option value="zh">简体中文<option value="zh-tw">繁體中文<option value="ko">한국어</select></label> <input type='submit' value='Use' class='hidden'>
+<input type='hidden' name='token' value='045353000203505d045d010a0d515007510d550c5d5b5a57020954005002005d:a51f1ec879c243cf4805dbce39161418'>
+</div>
+</form>
+</div>
+</div>
+
+<script nonce="YTFhNmRkNzIzNzVjNmJkM2RmODJmMTU3NzgyYTRkY2Q=">setupSubmitHighlight(document);</script>

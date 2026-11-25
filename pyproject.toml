@@ -57,3 +57,7 @@ markers = [
     "slow: long-running test, not run by default",
 ]
 addopts = "-m 'not slow'"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"

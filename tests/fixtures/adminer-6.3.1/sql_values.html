@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang='en' dir='ltr' class='ltr nojs'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SQL command - postgres - Adminer</title>
+<link rel="stylesheet" href="adminer.php?file=default.css&amp;version=6.3.1+5c48c0d4">
+<link rel='stylesheet' media='(prefers-color-scheme: dark)' href='adminer.php?file=dark.css&amp;version=6.3.1+5c48c0d4'>
+<meta name='color-scheme' content='light dark'>
+<script src='adminer.php?file=functions.js&amp;version=6.3.1+5c48c0d4' nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY="></script>
+<link rel='icon' href='data:image/gif;base64,R0lGODlhEAAQAJEAAAQCBPz+/PwCBAROZCH5BAEAAAAALAAAAAAQABAAAAI2hI+pGO1rmghihiUdvUBnZ3XBQA7f05mOak1RWXrNq5nQWHMKvuoJ37BhVEEfYxQzHjWQ5qIAADs='>
+<link rel='apple-touch-icon' href='adminer.php?file=logo.svg&amp;version=6.3.1+5c48c0d4'>
+<link rel='manifest' href='adminer.php?manifest=' crossorigin='use-credentials'>
+
+<body class=' adminer'>
+<script nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY=">onload = partial(verifyVersion, '6.3.1');
+
+const offlineMessage = 'You are offline.';
+const numberFormat = '#,##0';
+const numberDigits = '0123456789';
+const urlSeparators = '&';</script>
+<div id='help' class='jush-pgsql jsonly hidden' data-onmouseover='helpKeep()' data-onmouseout='helpMouseout()'></div>
+<div id='content'>
+<span id='menuopen' class='jsonly' data-onclick='menuToggle()'><button title='Menu' class='icon icon-move' aria-expanded='false'></button></span>
+<p id="breadcrumb"><span id='jump'><input type='search' form='jump-form' name='filter' value='' placeholder='Search' aria-label='Search' autocomplete='off' autocapitalize='off' role='combobox' aria-expanded='false' aria-autocomplete='list' aria-controls='jump-list' data-oninput='jumpInput()' data-onkeydown='jumpKeydown()' data-select='select' data-insert='insert' data-search='Search data in tables' data-schema='Schema' data-database='Database'><input type='submit' form='jump-form' value='Search' class='hidden'></span> <a href="adminer.php?pgsql=postgres">PostgreSQL</a> » <a href='adminer.php?pgsql=postgres&amp;username=reader' accesskey='1' title='Alt+Shift+1'>postgres</a> » <a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=">app</a> » SQL command
+<form id='jump-form'>
+<input type='hidden' name='pgsql' value='postgres'>
+<input type='hidden' name='username' value='reader'>
+<input type='hidden' name='db' value='app'>
+<input type='hidden' name='ns' value=''>
+</form>
+<script nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY=">jumpSetup();</script>
+<h2>SQL command</h2>
+<div id='ajaxstatus' role='status' class='jsonly'></div>
+<script nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY=">if (navigator.serviceWorker) {
+	navigator.serviceWorker.register('adminer.php?file=worker.js&version=6.3.1+5c48c0d4', {scope: location.pathname}).catch(() => {});
+}</script>
+<pre id='sql-1'><code class='jush-pgsql'>SELECT o.id, o.note, o.created_at, o.data, o.payload, c.name, c.email, NULL AS nothing, &#039;&#039; AS empty, 1 + 1 AS expr FROM orders o LEFT JOIN customers c ON c.id = o.customer_id ORDER BY o.id</code></pre>
+<form method='post'>
+<div class='scrollable'>
+<table class='nowrap odds' data-onclick='tableClick()' data-ondblclick='tableClick()' data-onkeydown='editingKeydown()'>
+<thead><tr><th title='orders.id int8'>id<th title='orders.note text'>note<th title='orders.created_at timestamptz'>created_at<th title='orders.data jsonb'>data<th title='orders.payload bytea'>payload<th title='customers.name text'>name<th title='customers.email text'>email<th title='text'>nothing<th title='text'>empty<th title='int4'>expr<tbody>
+<tr><td class='number'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;edit=orders&amp;where[id]=1'>1</a><td><i>NULL</i><td>2026-11-25 09:00:00+00<td>{&quot;a&quot;: 1, &quot;b&quot;: [1, 2]}<td><i>4 bytes</i><td>Alice<td><a href='mailto:alice@example.com'>alice@example.com</a><td><i>NULL</i><td><td class='number'>2<tr><td class='number'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;edit=orders&amp;where[id]=2'>2</a><td><td>2026-11-25 11:30:00+00<td>null<td>abc<td>Alice<td><a href='mailto:alice@example.com'>alice@example.com</a><td><i>NULL</i><td><td class='number'>2<tr><td class='number'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;edit=orders&amp;where[id]=3'>3</a><td>line 1
+line 2
+	tabbed<td><i>NULL</i><td><i>NULL</i><td><i>NULL</i><td>Bob<td><i>NULL</i><td><i>NULL</i><td><td class='number'>2<tr><td class='number'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;edit=orders&amp;where[id]=4'>4</a><td>&lt;i>NULL&lt;/i> &amp; &lt;b>bold&lt;/b> &quot;quoted&quot;<td><i>NULL</i><td>&quot;text&quot;<td><i>NULL</i><td>Příliš žluťoučký kůň 🐎<td><a href='https://example.com/profile' target="_blank" rel="noreferrer noopener">https://example.com/profile</a><td><i>NULL</i><td><td class='number'>2</table>
+</div>
+<p class='sql-footer'>4 rows <span class='time'>(0.001 s)</span> <a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;sql=SELECT+o.id,+o.note,+o.created_at,+o.data,+o.payload,+c.name,+c.email,+NULL+AS+nothing,+%27%27+AS+empty,+1+%2B+1+AS+expr+FROM+orders+o+LEFT+JOIN+customers+c+ON+c.id+%3D+o.customer_id+ORDER+BY+o.id'>Edit</a>, <a href='#explain-1' class='toggle'>Explain</a>, <a href='#export-1' class='toggle'>Export</a><span id='export-1' class='hidden'>: <select name='output'><option value="text">open<option value="file">save<option value="gz">gzip</select> <select name='format'><option value="sql">SQL<option value="csv">CSV,<option value="csv;">CSV;<option value="tsv">TSV</select><input type='hidden' name='query' value='SELECT o.id, o.note, o.created_at, o.data, o.payload, c.name, c.email, NULL AS nothing, &#039;&#039; AS empty, 1 + 1 AS expr FROM orders o LEFT JOIN customers c ON c.id = o.customer_id ORDER BY o.id'>
+<input type='submit' name='export' value='Export'><input type='hidden' name='token' value='5506050300560b01540d5057510306550201000b525755070350090403535d50:1cd4cf21a4ae03ebf9e816ceb413fd85'>
+</span>
+</form>
+<div id='explain-1' class='hidden explain'>
+<div class='scrollable'>
+<table class='nowrap odds'>
+<thead><tr><th title='text'>QUERY PLAN<tbody>
+<tr><td>Sort  (cost=56.48..57.28 rows=320 width=244)<tr><td>  Sort Key: o.id<tr><td>  ->  Hash Left Join  (cost=29.12..43.16 rows=320 width=244)<tr><td>        Hash Cond: (o.customer_id = c.id)<tr><td>        ->  Seq Scan on orders o  (cost=0.00..13.20 rows=320 width=116)<tr><td>        ->  Hash  (cost=18.50..18.50 rows=850 width=68)<tr><td>              ->  Seq Scan on customers c  (cost=0.00..18.50 rows=850 width=68)</table>
+</div>
+</div>
+
+<form method="post" enctype="multipart/form-data" id="form" data-onsubmit='sqlSubmit("adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=", 2000)'>
+<p><textarea name='query' rows='20' cols='80' class='sqlarea jush-pgsql' spellcheck='false' wrap='off'>
+SELECT o.id, o.note, o.created_at, o.data, o.payload, c.name, c.email, NULL AS nothing, &#039;&#039; AS empty, 1 + 1 AS expr FROM orders o LEFT JOIN customers c ON c.id = o.customer_id ORDER BY o.id</textarea><p><input type='submit' value='Execute' title='Ctrl+Enter'>
+Limit rows: <input type='number' name='limit' class='size' value='20'>
+<label><input type='checkbox' name='error_stops' value='1' checked>Stop on error</label>
+<label><input type='checkbox' name='only_errors' value='1'>Show only errors</label>
+<input type='hidden' name='token' value='0500510605525808565f500207565604525e5d550000555256550e0651530157:ae01fba8cfa0ff536f8fcac071614dd2'>
+<fieldset><legend><a href='#fieldset-history' class='toggle'>History</a></legend><div id='fieldset-history' class='hidden'>
+<div><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;sql=&amp;history=0" class="hover">Edit</a> <span class='time' title='2026-11-25'>23:30:51</span> <code class='sql jush-pgsql'>SELECT o.id, o.note, o.created_at, o.data, o.payload, c.name, c.email, NULL AS n</code><i>…</i></div>
+<input type='submit' name='clear' value='Clear'>
+<a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;sql=&amp;history=all'>Edit all</a>
+</div></fieldset>
+</form>
+</div>
+
+<div id='foot' class='foot'>
+<div id='menu'>
+<h1><a href='https://www.adminer.org/' target="_blank" rel="noreferrer noopener" id='h1'><img src='adminer.php?file=logo.svg&amp;version=6.3.1+5c48c0d4' width='24' height='24' alt='' id='logo'>Adminer</a> <span class='version'>6.3.1 <a href='https://www.adminer.org/#download' target="_blank" rel="noreferrer noopener" id='version'><noscript><iframe sandbox src='https://www.adminer.org/version/?current=6.3.1&amp;noscript=1'></iframe></noscript></a></span></h1>
+<form method='post'>
+<div id='lang'><label>Language: <select name='lang' data-onchange='formSubmit()'><option value="en" selected>English<option value="id">Bahasa Indonesia<option value="ms">Bahasa Melayu<option value="bs">Bosanski<option value="ca">Català<option value="cs">Čeština<option value="da">Dansk<option value="de">Deutsch<option value="et">Eesti<option value="es">Español<option value="fr">Français<option value="gl">Galego<option value="hr">Hrvatski<option value="it">Italiano<option value="lv">Latviešu<option value="lt">Lietuvių<option value="ro">Limba Română<option value="hu">Magyar<option value="nl">Nederlands<option value="no">Norsk<option value="uz">Oʻzbekcha<option value="pl">Polski<option value="pt">Português<option value="pt-br">Português (Brazil)<option value="sk">Slovenčina<option value="sl">Slovenski<option value="fi">Suomi<option value="sv">Svenska<option value="vi">Tiếng Việt<option value="tr">Türkçe<option value="bg">Български<option value="el">Ελληνικά<option value="ru">Русский<option value="sr">Српски<option value="uk">Українська<option value="he">עברית<option value="ar">العربية<option value="fa">فارسی<option value="hi">हिन्दी<option value="bn">বাংলা<option value="ta">த‌மிழ்<option value="th">ภาษาไทย<option value="ka">ქართული<option value="ja">日本語<option value="zh">简体中文<option value="zh-tw">繁體中文<option value="ko">한국어</select></label> <input type='submit' value='Use' class='hidden'>
+<input type='hidden' name='token' value='51000305570800560d00070553035756540104570658040652530f010654005d:5eb2489f8967234a09ade92d3776cce8'>
+</div>
+</form>
+<script src='adminer.php?file=jush.js&amp;version=6.3.1+5c48c0d4' nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY=" defer></script>
+<script nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY=">
+</script>
+<script nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY=">syntaxHighlighting('17', '');</script>
+<form>
+<p id='dbs'>
+<input type='hidden' name='pgsql' value='postgres'>
+<input type='hidden' name='username' value='reader'>
+<label title='Database'>DB: <select name='db' data-onmousedown='dbMouseDown()' data-onchange='dbChange()'><option value=""><option selected>app<option>other<optgroup label="System"><option>postgres<option>template1</optgroup></select></label><input type='submit' value='Use' class='hidden'>
+<br><label>Schema: <select name='ns' data-onmousedown='dbMouseDown()' data-onchange='dbChange()'><option value="" selected><option>audit<option>public<optgroup label="System"><option>information_schema<option>pg_catalog<option>pg_toast</optgroup></select></label><input type='hidden' name='sql' value=''>
+</p></form>
+<p class='links'>
+<a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;sql=' class='active '>SQL command</a>
+<a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;import='>Import</a>
+<a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=&amp;dump=' id='dump'>Export</a>
+<script nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY=">jumpSections.unshift(...[["Extensions","adminer.php?pgsql=postgres&username=reader&db=app&ns=#extensions"],["Process list","adminer.php?pgsql=postgres&username=reader&processlist="],["Variables","adminer.php?pgsql=postgres&username=reader&variables="]]);</script>
+</div>
+<form method="post">
+<p class="logout">
+<span title="Username">reader
+</span>
+<input type='submit' name='logout' value='Logout' id='logout'>
+<a href='https://www.adminer.org/donation/' target="_blank" rel="noreferrer noopener" id='donation' title='Donate'>❤️</a>
+<input type='hidden' name='token' value='5406550e51020900060052020301060e505c51515402550751060a5306555006:0c49220039c0b1e94d4b7cce0b2dcb5c'>
+</form>
+</div>
+
+<script nonce="YjBkMTlmNmQ0ZjU5ZTJiZGVlYWMwMTc0YzczNDIxNGY=">setupSubmitHighlight(document);</script>

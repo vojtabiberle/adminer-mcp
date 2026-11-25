@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang='en' dir='ltr' class='ltr nojs'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Schema: public - postgres - Adminer</title>
+<link rel="stylesheet" href="adminer.php?file=default.css&amp;version=6.3.1+5c48c0d4">
+<link rel='stylesheet' media='(prefers-color-scheme: dark)' href='adminer.php?file=dark.css&amp;version=6.3.1+5c48c0d4'>
+<meta name='color-scheme' content='light dark'>
+<script src='adminer.php?file=functions.js&amp;version=6.3.1+5c48c0d4' nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE="></script>
+<link rel='icon' href='data:image/gif;base64,R0lGODlhEAAQAJEAAAQCBPz+/PwCBAROZCH5BAEAAAAALAAAAAAQABAAAAI2hI+pGO1rmghihiUdvUBnZ3XBQA7f05mOak1RWXrNq5nQWHMKvuoJ37BhVEEfYxQzHjWQ5qIAADs='>
+<link rel='apple-touch-icon' href='adminer.php?file=logo.svg&amp;version=6.3.1+5c48c0d4'>
+<link rel='manifest' href='adminer.php?manifest=' crossorigin='use-credentials'>
+
+<body class=' adminer'>
+<script nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=">onload = partial(verifyVersion, '6.3.1');
+
+const offlineMessage = 'You are offline.';
+const numberFormat = '#,##0';
+const numberDigits = '0123456789';
+const urlSeparators = '&';</script>
+<div id='help' class='jush-pgsql jsonly hidden' data-onmouseover='helpKeep()' data-onmouseout='helpMouseout()'></div>
+<div id='content'>
+<span id='menuopen' class='jsonly' data-onclick='menuToggle()'><button title='Menu' class='icon icon-move' aria-expanded='false'></button></span>
+<p id="breadcrumb"><span id='jump'><input type='search' form='jump-form' name='filter' value='' placeholder='Search' aria-label='Search' autocomplete='off' autocapitalize='off' role='combobox' aria-expanded='false' aria-autocomplete='list' aria-controls='jump-list' data-oninput='jumpInput()' data-onkeydown='jumpKeydown()' data-select='select' data-insert='insert' data-search='Search data in tables' data-schema='Schema' data-database='Database'><input type='submit' form='jump-form' value='Search' class='hidden'></span> <a href="adminer.php?pgsql=postgres">PostgreSQL</a> » <a href='adminer.php?pgsql=postgres&amp;username=reader' accesskey='1' title='Alt+Shift+1'>postgres</a> » <a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=">app</a> » Schema: public
+<form id='jump-form'>
+<input type='hidden' name='pgsql' value='postgres'>
+<input type='hidden' name='username' value='reader'>
+<input type='hidden' name='db' value='app'>
+<input type='hidden' name='ns' value='public'>
+</form>
+<script nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=">jumpSetup();</script>
+<h2>Schema: public</h2>
+<div id='ajaxstatus' role='status' class='jsonly'></div>
+<script nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=">if (navigator.serviceWorker) {
+	navigator.serviceWorker.register('adminer.php?file=worker.js&version=6.3.1+5c48c0d4', {scope: location.pathname}).catch(() => {});
+}</script>
+<p class="links"><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;scheme='>Alter schema</a>
+<a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;schema=">Database schema</a>
+<a href='#routines'>Routines</a>
+<a href='#sequences'>Sequences</a>
+<a href='#user-types'>User types</a>
+<p class='nowrap'>Comment: standard public schema
+<div>
+<h3 id='tables-views'>Tables and views</h3>
+<form method='post'>
+<fieldset><legend>Search data in tables <span id='selected2'></span></legend><div><select name='op'><option>=<option>&lt;<option>><option>&lt;=<option>>=<option>!=<option>~<option>~*<option>!~<option>LIKE<option selected>LIKE %%<option>ILIKE<option>ILIKE %%<option>IN<option>BETWEEN<option>IS NULL<option>NOT LIKE<option>NOT ILIKE<option>NOT IN<option>IS NOT NULL<option>SQL</select> <input type='search' name='query' value='' data-onkeydown='submitKeydown("search")'> <input type='submit' name='search' value='Search'>
+</div></fieldset>
+<div class='scrollable'>
+<table class='nowrap checkable odds' data-onclick='tableClick()' data-ondblclick='tableClick()'>
+<thead><tr><td class="hover"><input id="check-all" type="checkbox" class="jsonly" title="All" data-onclick='formCheck("^(tables|views)\\[")'><th class="sticky" aria-sort='ascending'><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public">Table</a><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;order=Engine'>Engine</a><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;order=Data_length'>Data Length <a href='https://www.postgresql.org/docs/17/functions-admin.html#FUNCTIONS-ADMIN-DBOBJECT' target="_blank" rel="noreferrer noopener" class='doc' title='Documentation'>📖</a></a><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;order=Index_length'>Index Length <a href='https://www.postgresql.org/docs/17/functions-admin.html#FUNCTIONS-ADMIN-DBOBJECT' target="_blank" rel="noreferrer noopener" class='doc' title='Documentation'>📖</a></a><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;order=Data_free'>Data Free</a><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;order=Auto_increment'>Auto Increment</a><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;order=Rows'>Rows <a href='https://www.postgresql.org/docs/17/catalog-pg-class.html#CATALOG-PG-CLASS' target="_blank" rel="noreferrer noopener" class='doc' title='Documentation'>📖</a></a><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;order=Comment'>Comment <a href='https://www.postgresql.org/docs/17/functions-info.html#FUNCTIONS-INFO-COMMENT-TABLE' target="_blank" rel="noreferrer noopener" class='doc' title='Documentation'>📖</a></a><tbody>
+<tr><td class="hover"><input type='checkbox' name='tables[]' value='big' aria-labelledby='Table-big'><th class="sticky"><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;table=big' title='Show structure' id='Table-big'>big</a><td id='Engine-big'>table<td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;create=big' id='Data_length-big' title='Alter table'>114,688</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;indexes=big' id='Index_length-big' title='Alter indexes'>49,152</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;edit=big' id='Data_free-big' title='New item'>?</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;auto_increment=1&amp;create=big' id='Auto_increment-big' title='Alter table'></a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;select=big' id='Rows-big' title='Select data'>~ 1,500</a><td id='Comment-big'>
+<tr><td class="hover"><input type='checkbox' name='tables[]' value='customers' aria-labelledby='Table-customers'><th class="sticky"><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;table=customers' title='Show structure' id='Table-customers'>customers</a><td id='Engine-customers'>table<td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;create=customers' id='Data_length-customers' title='Alter table'>16,384</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;indexes=customers' id='Index_length-customers' title='Alter indexes'>16,384</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;edit=customers' id='Data_free-customers' title='New item'>?</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;auto_increment=1&amp;create=customers' id='Auto_increment-customers' title='Alter table'></a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;select=customers' id='Rows-customers' title='Select data'>?</a><td id='Comment-customers'>Customers of the shop
+<tr><td class="hover"><input type='checkbox' name='views[]' value='open_orders' aria-labelledby='Table-open_orders'><th class="sticky"><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;table=open_orders' title='Show structure' id='Table-open_orders'>open_orders</a><td colspan="5"><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;view=open_orders' title='Alter view'>View</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;select=open_orders' title='Select data'>?</a><td>
+<tr><td class="hover"><input type='checkbox' name='tables[]' value='orders' aria-labelledby='Table-orders'><th class="sticky"><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;table=orders' title='Show structure' id='Table-orders'>orders</a><td id='Engine-orders'>table<td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;create=orders' id='Data_length-orders' title='Alter table'>16,384</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;indexes=orders' id='Index_length-orders' title='Alter indexes'>32,768</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;edit=orders' id='Data_free-orders' title='New item'>?</a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;auto_increment=1&amp;create=orders' id='Auto_increment-orders' title='Alter table'></a><td align='right'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;select=orders' id='Rows-orders' title='Select data'>?</a><td id='Comment-orders'>
+<tr><td class='hover'><th class='sticky'>4 in total<td><td align='right' id='sum-Data_length'>147,456<td align='right' id='sum-Index_length'>98,304<td align='right' id='sum-Data_free'>0
+</table>
+</div>
+<div class='footer'><div>
+<fieldset><legend>Selected <span id='selected'></span></legend><div><input type='submit' value='Vacuum' data-onmouseover='helpMouseover("VACUUM", 0)' data-onmouseout='helpMouseout()'> <input type='submit' name='optimize' value='Optimize' data-onmouseover='helpMouseover("VACUUM ANALYZE", 0)' data-onmouseout='helpMouseout()'> <input type='submit' name='truncate' value='Truncate' data-onclick='confirmClick("Are you sure?")' data-onmouseover='helpMouseover("TRUNCATE", 0)' data-onmouseout='helpMouseout()'> <input type='submit' name='drop' value='Drop' data-onclick='confirmClick("Are you sure?")' data-onmouseover='helpMouseover("DROP TABLE", 0)' data-onmouseout='helpMouseout()'>
+</div></fieldset>
+<fieldset><legend>Move to another database <span id='selected3'></span></legend><div><select name='target'><option>audit<option>information_schema<option>pg_catalog<option>pg_toast<option selected>public</select></label> <input type='submit' name='move' value='Move'></div></fieldset>
+<input type='hidden' name='all' value='' data-onclick='countTables(3)'>
+<input type='hidden' name='token' value='00540b520657570407550200030e025755575757025152030053050507010054:3d8fd4ee0a1479a51314f0beccf3f17c'>
+</div></div>
+</form>
+<script nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=">tableCheck();</script>
+<p class='links hover'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;create='>Create table</a>
+<a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;view='>Create view</a>
+</div>
+<div>
+<h3 id='routines'>Routines</h3>
+<table class='odds'>
+<thead><tr><th>Name<th>Type<th>Return type<td class='hover'><tbody>
+<tr><th><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;callf=archive_orders_16433&amp;name=archive_orders" title="Call">archive_orders</a><td>FUNCTION<td>int4<td class="hover"><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;function=archive_orders_16433&amp;name=archive_orders">Alter</a></table>
+<p class="links hover"><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;procedure=">Create procedure</a><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;function=">Create function</a>
+</div>
+<div>
+<h3 id='sequences'>Sequences</h3>
+<table class='odds'>
+<thead><tr><th>Name<tbody>
+<tr><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;sequence=customers_id_seq'>customers_id_seq</a>
+<tr><th><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;sequence=orders_id_seq'>orders_id_seq</a>
+</table>
+<p class='links hover'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;sequence='>Create sequence</a>
+</div>
+<div>
+<h3 id='user-types'>User types</h3>
+<p class='links hover'><a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;type='>Create type</a>
+</div>
+</div>
+
+<div id='foot' class='foot'>
+<div id='menu'>
+<h1><a href='https://www.adminer.org/' target="_blank" rel="noreferrer noopener" id='h1'><img src='adminer.php?file=logo.svg&amp;version=6.3.1+5c48c0d4' width='24' height='24' alt='' id='logo'>Adminer</a> <span class='version'>6.3.1 <a href='https://www.adminer.org/#download' target="_blank" rel="noreferrer noopener" id='version'><noscript><iframe sandbox src='https://www.adminer.org/version/?current=6.3.1&amp;noscript=1'></iframe></noscript></a></span></h1>
+<form method='post'>
+<div id='lang'><label>Language: <select name='lang' data-onchange='formSubmit()'><option value="en" selected>English<option value="id">Bahasa Indonesia<option value="ms">Bahasa Melayu<option value="bs">Bosanski<option value="ca">Català<option value="cs">Čeština<option value="da">Dansk<option value="de">Deutsch<option value="et">Eesti<option value="es">Español<option value="fr">Français<option value="gl">Galego<option value="hr">Hrvatski<option value="it">Italiano<option value="lv">Latviešu<option value="lt">Lietuvių<option value="ro">Limba Română<option value="hu">Magyar<option value="nl">Nederlands<option value="no">Norsk<option value="uz">Oʻzbekcha<option value="pl">Polski<option value="pt">Português<option value="pt-br">Português (Brazil)<option value="sk">Slovenčina<option value="sl">Slovenski<option value="fi">Suomi<option value="sv">Svenska<option value="vi">Tiếng Việt<option value="tr">Türkçe<option value="bg">Български<option value="el">Ελληνικά<option value="ru">Русский<option value="sr">Српски<option value="uk">Українська<option value="he">עברית<option value="ar">العربية<option value="fa">فارسی<option value="hi">हिन्दी<option value="bn">বাংলা<option value="ta">த‌மிழ்<option value="th">ภาษาไทย<option value="ka">ქართული<option value="ja">日本語<option value="zh">简体中文<option value="zh-tw">繁體中文<option value="ko">한국어</select></label> <input type='submit' value='Use' class='hidden'>
+<input type='hidden' name='token' value='0756500c07565404520002000055540407015300570704555006535459095306:4fc8e5fee4144b7fce5c3f43360b89d1'>
+</div>
+</form>
+<script src='adminer.php?file=jush.js&amp;version=6.3.1+5c48c0d4' nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=" defer></script>
+<script nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=">
+var jushLinks = { pgsql:{
+	"adminer.php?pgsql=postgres&username=reader&db=app&ns=public&table=$&": /\b(?<!\$)(big|customers|open_orders|orders)(?!\$)\b/g
+}
+};
+jushLinks.bac = jushLinks.pgsql;
+jushLinks.bra = jushLinks.pgsql;
+jushLinks.sqlite_quo = jushLinks.pgsql;
+jushLinks.mssql_bra = jushLinks.pgsql;
+</script>
+<script nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=">syntaxHighlighting('17', '');</script>
+<form>
+<p id='dbs'>
+<input type='hidden' name='pgsql' value='postgres'>
+<input type='hidden' name='username' value='reader'>
+<label title='Database'>DB: <select name='db' data-onmousedown='dbMouseDown()' data-onchange='dbChange()'><option value=""><option selected>app<option>other<optgroup label="System"><option>postgres<option>template1</optgroup></select></label><input type='submit' value='Use' class='hidden'>
+<br><label>Schema: <select name='ns' data-onmousedown='dbMouseDown()' data-onchange='dbChange()'><option value=""><option>audit<option selected>public<optgroup label="System"><option>information_schema<option>pg_catalog<option>pg_toast</optgroup></select></label></p></form>
+<p class='links'>
+<a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;sql='>SQL command</a>
+<a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;import='>Import</a>
+<a href='adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;dump=' id='dump'>Export</a>
+<a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;create=">Create table</a>
+<script nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=">jumpSections.unshift(...[["Create table","adminer.php?pgsql=postgres&username=reader&db=app&ns=public&create="],["Create view","adminer.php?pgsql=postgres&username=reader&db=app&ns=public&view="],["Database schema","adminer.php?pgsql=postgres&username=reader&db=app&ns=public&schema="],["Routines","adminer.php?pgsql=postgres&username=reader&db=app&ns=public#routines"],["Sequences","adminer.php?pgsql=postgres&username=reader&db=app&ns=public#sequences"],["User types","adminer.php?pgsql=postgres&username=reader&db=app&ns=public#user-types"],["Extensions","adminer.php?pgsql=postgres&username=reader&db=app&ns=#extensions"],["Process list","adminer.php?pgsql=postgres&username=reader&processlist="],["Variables","adminer.php?pgsql=postgres&username=reader&variables="]]);</script>
+<ul id='tables' data-onmouseover='menuOver()' data-onmouseout='menuOut()'><li><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;select=big" class='select hover' title='Select data'>select</a> <a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;table=big" class='structure' title='Show structure'>big</a>
+<li><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;select=customers" class='select hover' title='Select data'>select</a> <a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;table=customers" class='structure' title='Show structure'>customers</a>
+<li><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;select=open_orders" class='select hover' title='Select data'>select</a> <a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;table=open_orders" class='view' title='Show structure'>open_orders</a>
+<li><a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;select=orders" class='select hover' title='Select data'>select</a> <a href="adminer.php?pgsql=postgres&amp;username=reader&amp;db=app&amp;ns=public&amp;table=orders" class='structure' title='Show structure'>orders</a>
+</ul>
+</div>
+<form method="post">
+<p class="logout">
+<span title="Username">reader
+</span>
+<input type='submit' name='logout' value='Logout' id='logout'>
+<a href='https://www.adminer.org/donation/' target="_blank" rel="noreferrer noopener" id='donation' title='Donate'>❤️</a>
+<input type='hidden' name='token' value='03070150035b02040e00525103015b5407535251545204535452020f50005151:072da80e94ae7686c74203457ba910ff'>
+</form>
+</div>
+
+<script nonce="YWJhNTNiZGZkYzhkNmU3NTlhNGZjOGMzNTZmMDRkZGE=">setupSubmitHighlight(document);</script>
