@@ -18,7 +18,10 @@ Adminer is either a single PHP file (`https://host/adminer.php`) or a directory 
   - `pgsql`, `sqlite`, `mssql`, `oracle` – built-in drivers (`adminer/drivers/*.inc.php`),
   - `mongo`, `elastic`, `clickhouse`, `firebird`, `simpledb`, `imap`, `redis`, `igdb` – plugin drivers (`plugins/drivers/`). They work only if the Adminer installation on the server has them.
 - **`db`** is optional. Without it, PostgreSQL connects to the `postgres` database (`adminer/drivers/pgsql.inc.php`) and MySQL connects with no database selected. An empty `db=` means the database overview.
-- **`ns`** (schema) applies only together with `db` (constant `ME` in `adminer/include/bootstrap.inc.php`).
+- **`ns`** (schema) applies only together with `db` (constant `ME` in `adminer/include/bootstrap.inc.php`). For drivers with schemas (PostgreSQL), `adminer/include/connect.inc.php` decides:
+  - `ns` missing → Adminer **redirects** (303) to the same URL with `ns={current_schema()}`. A POST that gets this redirect loses its data, so the SQL never runs. The client therefore always sends `ns` when it sends `db`.
+  - `ns=` (empty) → no schema handling: the default `search_path` of the user applies.
+  - `ns=X` → Adminer sets `search_path` to `X` only (`set_config('search_path', …)`); unqualified names from other schemas, including `public`, are then not found. If `X` does not exist, the page shows `div.error` "Not found." and no statement runs.
 - **Page**: the SQL command page is `sql=` (empty value). The MVP does not use other pages.
 
 The password is stored in the session under the driver/server/user triple (`set_password`). Changing `db` or `ns` in the URL does not need a new login.
@@ -55,7 +58,7 @@ See `adminer/include/auth.inc.php`.
    | `auth[db]` | database, can be empty |
    | `token` | token from step 1 |
 
-3. Adminer only stores the password in the session and **always** redirects to `?{driver}={server}&username={user}[&db=…]`. The check happens when the target page loads, so the client must follow the redirect and evaluate the target page:
+3. Adminer only stores the password in the session and **always** redirects (303) to `?{driver}={server}&username={user}[&db=…]`. With a database, the target page redirects once more to add `ns`. The check happens when the target page loads, so the client must follow the redirects and evaluate the final page:
    - success: a normal page with navigation (`span.version`) and a token,
    - failure: HTTP 403 and the login form again, with the error in `div.error`. The error is "Invalid credentials.", the database connection error text, or "Adminer does not support accessing a database without a password." Only then is the failed attempt recorded (`add_invalid_login`).
 
@@ -63,7 +66,7 @@ Adminer does not support an empty password (`Adminer::login`).
 
 ### Detecting the logged-out state
 
-The response contains `input[name="auth[password]"]`. If the URL contains `username`, the status is also HTTP 403. After the session expires, the message is "Session expired. Please log in again."
+The response contains `input[name="auth[password]"]`. If the URL contains `username`, the status is also HTTP 403. Depending on the session state, an expired session shows "Session expired. Please log in again." or only the login form without a message, so the client relies on the form, not on the text.
 
 ### Brute-force protection
 
@@ -131,6 +134,11 @@ See `adminer/sql.inc.php`.
 More notes:
 
 - The HTML omits end tags (`<td>`, `<tr>`, `<p>`), so the parser must be HTML5 compliant.
+- **Numbers in messages have a thousands separator**: `5 / 1,500 rows`, `Query executed OK, 12,345 rows affected.`, `1,024 bytes` (`lang_format` calls `format_number` for every `%d`).
+- The automatic EXPLAIN of a `SELECT` is a second `table.nowrap` inside `div.explain` right after the result. It is not a result of the statement.
+- A `pre` without `id` is either the `ROLLBACK -- Adminer` marker or a statement that contains only a comment (printed but not run). Tell them apart by the text.
+- Database notices (e.g. `RAISE NOTICE`) are in `div#warnings-N` after the statement message.
+- An error message contains `<br>` between the error and its `CONTEXT`/`LINE` part. PostgreSQL errors have no `(errno)`.
 - The `title` attribute on `<th>` has the form `{orgtable}.{orgname} {type}`, or just `{type}`. For expressions without a table, the table can be missing.
 - **A result without rows does not return column names.** There is only "No rows."
 - The `p.sql-footer` footer contains `{limit} / {total} rows` if the result exceeded the limit, otherwise `{n} rows`.
@@ -148,6 +156,7 @@ See `select_value` in `functions.inc.php` and `Adminer::selectVal` in `adminer.i
 | `char`, `binary`, `boolean` (not `var*`) | `<code>…</code>` |
 | `json`, `jsonb` | `<code class='jush-json'>…</code>` |
 | e-mail or URL | wrapped in `<a href>` |
+| primary key value | wrapped in `<a href>` to the edit page |
 | binary data that is not UTF-8 | `<i>N bytes</i>` (the value is not available) |
 | nested arrays (document drivers) | nested `<table>` |
 | numeric types | `td.number` |
@@ -184,9 +193,14 @@ The version is in the navigation as `<span class='version'>6.3.1</span>` inside 
 
 ## Parser markup dependencies (checklist for version changes)
 
+- `#content` as the container of everything below
 - `input[name="auth[password]"]`, `input[name=token]`, `div.error`
-- `pre[id^=sql-]` as the start of a statement result
-- `table.nowrap` → `thead th[title]`, `tbody tr td`, `td > i` for NULL and binary data
-- `p.message`, `p.error`, `p.sql-footer`
-- English texts: `Query executed OK, %d row(s) affected.`, `No rows.`, `Error in query`, `%d / %d rows`, `Too many unsuccessful logins`, `Session expired`
+- `pre[id^=sql-]` as the start of a statement result; `pre` without `id` with the text `ROLLBACK -- Adminer`
+- `table.nowrap` → `thead th[title]`, `tbody tr td`, a single `td > i` for NULL and binary data; tables inside `div.explain` are skipped
+- `p.message`, `p.error` (a summary `p.error` contains `a[href^="#sql-"]`), `p.sql-footer`, `div[id^=warnings-]`
+- the SQL form `form#form` (contains the query text and the history) is skipped
+- English texts: `Query executed OK, %d row(s) affected.`, `No rows.`, `Error in query`, `%d / %d rows` (with thousands separators), `%d byte(s)`, `Too many unsuccessful logins`, `Invalid CSRF token`, `Not found.`
 - `span.version`
+- the redirect rule for `ns` in `adminer/include/connect.inc.php`
+
+The fixtures in `tests/fixtures/adminer-6.3.1/` cover each item; `tests/fixtures/record.py` records them again.

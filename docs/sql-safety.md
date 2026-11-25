@@ -12,25 +12,29 @@ Protection has three layers. None of them is enough alone:
 
 ## Statement categories
 
-The classifier splits the SQL into statements (`sqlglot.parse` with the profile dialect) and assigns each one a category:
+The classifier splits the SQL into statements with the sqlglot **tokenizer** of the profile dialect (it respects quotes, comments and `$$` quoting; comments and empty statements disappear). The category comes from the **leading keyword**; the sqlglot AST is used only for details: WHERE conditions, data-modifying CTEs, `SELECT … INTO`, `FOR UPDATE/SHARE`, and called functions. The reason: sqlglot misparses some statements (`START TRANSACTION` and `CLUSTER t` come back as an alias), and parses others only as a generic command (`EXPLAIN`, `SHOW`, `VACUUM`, `CALL`, `DO`). For `EXPLAIN`, the classifier tokenizes the rest again and classifies the inner statement.
+
+Categories:
 
 | Category | Examples | `query` | `execute` |
 |---|---|---|---|
 | `read` | `SELECT`, `WITH … SELECT` without data-modifying CTEs, `VALUES`, `TABLE t`, `SHOW`, `EXPLAIN` (without `ANALYZE` of a non-read statement) | yes | yes |
 | `session` | `SET`/`RESET` of common parameters (`search_path`, `statement_timeout`, `work_mem`, …) | yes | yes |
-| `session_privileged` | `SET ROLE`, `SET SESSION AUTHORIZATION`, `SET [default_]transaction_read_only`, `SET SESSION CHARACTERISTICS` | no | yes |
+| `session_privileged` | `SET ROLE`, `SET SESSION AUTHORIZATION`, `SET [default_]transaction_read_only`, `SET SESSION CHARACTERISTICS`, `SET TRANSACTION`, `RESET ALL`, `RESET` of these settings | no | yes |
 | `lock` | `SELECT … FOR UPDATE/SHARE`, `LOCK TABLE` | no | yes |
 | `transaction` | `BEGIN`, `START TRANSACTION`, `COMMIT`, `ROLLBACK`, `SAVEPOINT` | no | yes |
 | `dml` | `INSERT`, `UPDATE`, `DELETE`, `MERGE`, `SELECT … INTO`, `COPY … FROM`, CTEs with `INSERT/UPDATE/DELETE` | no | with `allow_write` |
 | `ddl` | `CREATE`, `ALTER`, `DROP`, `TRUNCATE`, `COMMENT`, `GRANT`, `REVOKE`, `REINDEX`, `CLUSTER`, `VACUUM`, `ANALYZE`, `REFRESH MATERIALIZED VIEW`, `CALL`, `DO` | no | with `allow_write` and `allow_ddl` |
-| `unknown` | anything sqlglot cannot parse (returns `exp.Command`) or does not know, meta-commands (`\connect`), `DELIMITER` | no | same as `ddl` |
+| `unknown` | any other leading keyword (`PREPARE`, `EXECUTE`, `LISTEN`, `NOTIFY`, `DECLARE`, `DISCARD`, …), `COPY … TO`, a `SELECT`/DML statement that sqlglot cannot parse | no | same as `ddl` |
 
-`CALL` and `DO` are in `ddl` because they run arbitrary code.
+`CALL` and `DO` are in `ddl` because they run arbitrary code. `EXECUTE` is `unknown` because a prepared statement can do anything.
+
+Always rejected, in both tools: the psql meta-command `\connect` (use the `database` parameter) and `DELIMITER`.
 
 ## Rules for the `query` tool
 
 - All statements must be `read` or `session`. Otherwise `PolicyError` with the list of statements and categories and the hint "use `execute`".
-- **Functions with side effects** in an otherwise read query are forbidden (best effort, list per dialect). For PostgreSQL: `pg_terminate_backend`, `pg_cancel_backend`, `pg_reload_conf`, `pg_rotate_logfile`, `pg_advisory_*lock*`, `nextval`, `setval`, `set_config`, `lo_*`, `dblink*`, `pg_read_*file`, `pg_ls_dir`, `pg_switch_wal`, `pg_create_*_replication_slot`, `pg_drop_replication_slot`, `pg_sleep*`.
+- **Functions with side effects** in an otherwise read query are forbidden (best effort, list per dialect). For PostgreSQL: `pg_terminate_backend`, `pg_cancel_backend`, `pg_reload_conf`, `pg_rotate_logfile`, `pg_advisory_*lock*`, `pg_try_advisory_*lock*`, `nextval`, `setval`, `set_config`, `lo_*`, `dblink*`, `pg_read_*file`, `pg_ls_dir`, `pg_file_write`, `pg_switch_wal`, `pg_create_*_replication_slot`, `pg_drop_replication_slot`, `pg_sleep*`.
 - `EXPLAIN ANALYZE` passes only if the inner statement is `read`.
 - The read-only prelude (ADR-0005) is prepended to the SQL. Statements that would turn it off (`SET … transaction_read_only`, `SET SESSION CHARACTERISTICS`, `RESET ALL`) are rejected.
 
@@ -46,6 +50,13 @@ The classifier splits the SQL into statements (`sqlglot.parse` with the profile 
   - Also applies to MySQL `UPDATE … LIMIT n` without WHERE.
 - `TRUNCATE` is `ddl` and also requires `allow_full_table = true`.
 - Multiple statements in one call are allowed. Each is checked separately, and the strictest result decides.
+- **`atomic` and `dry_run`** ([RFC-0001](rfc/0001-transactions-within-one-request.md)):
+  - cannot be combined;
+  - reject `transaction` statements (`BEGIN`, `COMMIT`, `END`, `ROLLBACK`, `SAVEPOINT`, `RELEASE`, …): an inner `COMMIT` would end the block early, and in a dry run it would save the changes;
+  - reject DDL in dialects without transactional DDL (PostgreSQL has it);
+  - `dry_run` also rejects functions whose effects a rollback does not undo. For PostgreSQL: `nextval`, `setval`, `dblink*`, `pg_terminate_backend`, `pg_cancel_backend`, `pg_advisory_lock*`, `pg_try_advisory_lock*`, `pg_file_write`. Side effects inside triggers or `DO` blocks cannot be detected;
+  - `dry_run` keeps all other rules, including the WHERE guard: a full-table dry run still locks and processes the whole table.
+- Without `atomic`/`dry_run`, a `BEGIN` without a later `COMMIT`/`ROLLBACK` is allowed, but the result warns that Adminer will roll the transaction back ([ADR-0012](adr/0012-report-adminer-rollback.md)).
 
 Tautology detection is best effort. `WHERE id = id` or `WHERE id IS NULL OR id IS NOT NULL` may not be detected. The goal is to catch the most common mistake (a forgotten WHERE), not to prove that the condition restricts something.
 
@@ -53,14 +64,14 @@ Tautology detection is best effort. `WHERE id = id` or `WHERE id IS NULL OR id I
 
 The classifier splits SQL with sqlglot; Adminer uses its own parser (see [adminer-protocol.md](adminer-protocol.md#processing)). If the splits differed, the classifier could check different statements than the ones Adminer runs. Therefore:
 
-- `query` rejects SQL that sqlglot cannot parse.
-- `DELIMITER`, `\connect` and `COPY … FROM stdin` are always rejected in `query`.
+- `query` rejects SQL that sqlglot cannot parse (category `unknown`).
+- `DELIMITER` and `\connect` are always rejected; `COPY` is never a read, so `query` rejects it.
 - After execution, the number of statements from the classifier is compared with the number of `pre[id^=sql-]` blocks in the response. A difference is returned as a warning and logged. For `query`, it signals a classifier bug that must be fixed.
 
 ## What the MCP server does not do
 
-- **It does not wrap queries in transactions** (ADR-0004). In addition, Adminer itself calls `ROLLBACK` at the end of every request, so no transaction can stay open between calls.
-- It does not find out the number of affected rows in advance. A possible "dry run" (`SELECT count(*) … WHERE <same condition>` before UPDATE/DELETE) is a candidate for a separate PRD.
+- **It does not wrap queries in transactions by default** (ADR-0004). Only an explicit `atomic` or `dry_run` adds `BEGIN` and `COMMIT`/`ROLLBACK`. In addition, Adminer itself calls `ROLLBACK` at the end of every request, so no transaction can stay open between calls.
+- It does not find out the number of affected rows in advance on its own. Use `dry_run` to see it before a real run.
 - It does not prevent reading sensitive data. That is a matter of database user privileges.
 
 ## Tests

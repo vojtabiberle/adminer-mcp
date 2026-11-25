@@ -1,6 +1,6 @@
 # RFC-0001: Transactions within one request
 
-- **Status:** Accepted
+- **Status:** Implemented
 - **Author:** Vojtěch Biberle
 - **Date:** 2026-11-26
 - **Follows:** PRD-0001

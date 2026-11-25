@@ -23,7 +23,7 @@ The tools are stateless: the database selection is not remembered between calls.
 | `explain` | reads | Query plan |
 | `execute` | writes | DML with `allow_write`, DDL with `allow_write` and `allow_ddl`. Registered only if some profile has `allow_write` |
 | `reconnect` | – | Drops the profile session and clears the `auth_failed` state |
-| `export_query` | reads | Export a result to a local file (PRD-0001 R15, Could, not in the MVP) |
+| `export_query` | reads | Export a result to a local file (PRD-0001 R15, Could, **not implemented**) |
 
 ## `list_profiles`
 
@@ -36,6 +36,7 @@ Output:
   {
     "name": "prod",
     "description": "production, read only",
+    "default": true,
     "driver": "pgsql",
     "server": "db-prod.internal:5432",
     "username": "app_reader",
@@ -49,7 +50,7 @@ Output:
 ]
 ```
 
-Passwords are not returned. The Adminer URL is not returned either; the agent does not need it.
+`adminer_version` is `null` until the profile logs in. Passwords are not returned. The Adminer URL is not returned either; the agent does not need it.
 
 ## `list_databases`
 
@@ -134,6 +135,8 @@ Output:
 ```
 
 - Values are strings in the text form the database returns. NULL is `null`. Types are not converted, so nothing is lost (`numeric` precision, time zones).
+- A value longer than `max_cell_chars` is cut and ends with `… [truncated, N characters]`; `truncated_cells` counts them. The rows of one result stop at about 200,000 characters, with a warning.
+- Database notices (e.g. `RAISE NOTICE`) are in the `warnings` field of the statement.
 - A binary value that is not UTF-8 is `{"binary_bytes": N}`, because Adminer does not return the content.
 - Result without rows: `"kind": "empty"`, `columns` is `null` (Adminer does not return column names for an empty result).
 - Error: `"kind": "error"`, `"error": "…"`. Further statements do not run (`error_stops`).
@@ -143,8 +146,8 @@ Output:
 
 Input: `sql` (one statement), `analyze` (bool, default `false`).
 
-- `analyze = true` actually runs the query, so it is allowed only for statements that pass as reads.
-- The output has the same shape as `query` (one `result_set` with the plan rows).
+- `analyze = true` actually runs the query (`EXPLAIN (ANALYZE, BUFFERS)`), so it is allowed only for statements that pass as reads. It runs in the read-only session like `query`.
+- The output has the same shape as `query` (one `result_set` with the plan rows, up to 10,000 rows).
 
 ## `execute`
 
@@ -155,19 +158,48 @@ Input:
 | Parameter | Type | Description |
 |---|---|---|
 | `sql` | string, required | One or more statements |
-| `allow_full_table` | bool | Confirms that UPDATE/DELETE without a restricting WHERE is intended. Default `false` |
+| `allow_full_table` | bool | Confirms that UPDATE/DELETE without a restricting WHERE (or `TRUNCATE`) is intended. Default `false` |
+| `atomic` | bool | Wrap the SQL in `BEGIN … COMMIT`: all or nothing ([ADR-0013](adr/0013-atomic-execute.md)). Default `false` |
+| `dry_run` | bool | Wrap the SQL in `BEGIN … ROLLBACK`: run it, return the results, save nothing ([ADR-0014](adr/0014-dry-run-execute.md)). Default `false` |
 | `max_rows` | int | For `RETURNING` and read statements inside |
 
-The output has the same shape as `query`. Statements without a result set have `"kind": "affected", "affected_rows": N`.
+Rules: see [sql-safety.md](sql-safety.md#rules-for-the-execute-tool). `atomic` and `dry_run` cannot be combined, and with either of them the SQL must not contain `BEGIN`, `COMMIT`, `ROLLBACK`, `SAVEPOINT` or similar.
+
+The output has the same shape as `query`, plus a `transaction` object ([RFC-0001](rfc/0001-transactions-within-one-request.md)). Statements without a result set have `"kind": "affected", "affected_rows": N`. Statement indexes refer to the agent SQL; the statements that the MCP server adds for `atomic` and `dry_run` are not in the output.
+
+```json
+"transaction": {
+  "mode": "none | explicit | atomic | dry_run",
+  "outcome": "none | committed | rolled_back | dry_run_rolled_back | rolled_back_by_adminer",
+  "failed_statement": 2
+}
+```
+
+| `mode` | Meaning |
+|---|---|
+| `none` | No transaction statements; every statement ran in autocommit |
+| `explicit` | The agent wrote `BEGIN … COMMIT` (or `ROLLBACK`) itself |
+| `atomic`, `dry_run` | The parameter of the same name |
+
+| `outcome` | Meaning |
+|---|---|
+| `none` | Autocommit, no transaction |
+| `committed` | The transaction was committed |
+| `rolled_back` | The atomic block or the dry run failed, or the agent's own `ROLLBACK` ran; nothing from the transaction was saved |
+| `dry_run_rolled_back` | The dry run succeeded and was rolled back |
+| `rolled_back_by_adminer` | A transaction was still open at the end of the request and Adminer rolled it back ([ADR-0012](adr/0012-report-adminer-rollback.md)) |
+
+`failed_statement` is the index of the failed statement or `null`. Warnings in `warnings` explain the outcome, e.g. that earlier statements stay applied in autocommit, or that nothing was saved.
 
 Warnings in the tool description for the agent:
 
-- Each statement runs immediately in autocommit. If an error occurs in the middle, the earlier statements stay applied.
+- Without `atomic` or `dry_run`, each statement runs immediately in autocommit. If an error occurs in the middle, the earlier statements stay applied and the later ones do not run.
 - An explicit `BEGIN … COMMIT` works within one call. Adminer rolls back an unfinished transaction at the end of the request; a transaction does not persist between calls.
+- `dry_run` really runs the statements: it takes locks and costs the same as a real run; side effects in triggers are not undone.
 
 ## `reconnect`
 
-Input: `profile`. Logs out the old session if it is still valid (ADR-0011), drops cookies and the token, reloads the password (env/keyring), clears the `auth_failed` state and makes one login attempt. Output: profile state and Adminer version.
+Input: `profile`. Logs out the old session if it is still valid (ADR-0011), drops cookies and the token, reloads the password (env/keyring), clears the `auth_failed` state and makes one login attempt. Output: `{"profile", "state", "adminer_version", "warnings"}`.
 
 ## Tool descriptions for the agent
 

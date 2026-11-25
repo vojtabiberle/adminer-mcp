@@ -61,4 +61,4 @@ Rules:
 
 | RFC | Title | Status |
 |---|---|---|
-| [0001](rfc/0001-transactions-within-one-request.md) | Transactions within one request (ADR-0012 to ADR-0014) | Accepted |
+| [0001](rfc/0001-transactions-within-one-request.md) | Transactions within one request (ADR-0012 to ADR-0014) | Implemented |

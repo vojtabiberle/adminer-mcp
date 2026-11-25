@@ -9,6 +9,8 @@ Decision: [ADR-0008](adr/0008-profiles-and-secrets.md).
 
 If both sources exist, the profile from the environment is added to the profiles from the file. A name collision on `default` is a configuration error.
 
+`default_profile` is required when there is more than one profile; with one profile, that profile is the default. Without any profile, the server does not start and prints what to configure.
+
 ## Profile file
 
 ```toml
@@ -50,7 +52,7 @@ password = { env = "ADMINER_STAGING_BASIC_PASSWORD" }
 | Field | Required | Default | Description |
 |---|---|---|---|
 | `url` | yes | – | Adminer address without a query string |
-| `driver` | yes | – | Adminer driver id: `pgsql`, `server` (MySQL/MariaDB), `sqlite`, `mssql`, `oracle`, or a plugin driver. Aliases: `mysql` → `server`, `postgres`/`postgresql` → `pgsql`. The MVP supports only `pgsql`; others give the error "driver not supported yet" |
+| `driver` | yes | – | Adminer driver id: `pgsql`, `server` (MySQL/MariaDB), `sqlite`, `mssql`, `oracle`, or a plugin driver. Case-insensitive aliases: `mysql`/`mariadb` → `server`, `postgres`/`postgresql` → `pgsql`. The MVP supports only `pgsql`; others pass validation but the tools return "driver … is not supported yet" |
 | `server` | yes* | `""` | `host[:port]`. Empty only for drivers where Adminer allows it (SQLite) |
 | `username` | yes | – | Database user |
 | `password` | yes | – | `{ env = "NAME" }`, `{ keyring = true }` (account = profile name) or `{ keyring = "other-account" }`. Plain-text passwords are not supported |
@@ -58,7 +60,7 @@ password = { env = "ADMINER_STAGING_BASIC_PASSWORD" }
 | `schema` | no | none | Default schema (`ns`). Applies only together with a database |
 | `allow_write` | no | `false` | Enables the `execute` tool for DML ([ADR-0006](adr/0006-sql-classifier-and-write-gate.md)) |
 | `allow_ddl` | no | `false` | Enables DDL in `execute`; needs `allow_write` too ([ADR-0007](adr/0007-ddl-separate-flag.md)) |
-| `basic_auth` | no | – | `{ username, password = {env|keyring} }` |
+| `basic_auth` | no | – | `{ username, password = {env|keyring} }`. With `{ keyring = true }` the keyring account is `<profile>/basic_auth` |
 | `verify_tls` | no | `true` | Certificate verification |
 | `timeout` | no | `60` | HTTP request timeout in seconds |
 | `max_rows` | no | `100` | Default number of returned rows per statement |
@@ -82,11 +84,19 @@ password = { env = "ADMINER_STAGING_BASIC_PASSWORD" }
 
 The environment profile is created only if `ADMINER_URL` is set.
 
+Other variables:
+
+| Variable | Meaning |
+|---|---|
+| `ADMINER_MCP_CONFIG` | Path to the profile file |
+| `ADMINER_MCP_LOG_LEVEL` | Log level on stderr (`DEBUG`, `INFO`, `WARNING`, …), default `INFO` |
+
 ## Passwords
 
 - **Keyring:** `adminer-mcp set-password prod` asks for the password and stores it under the service `adminer-mcp`, account `prod`. On Linux this uses Secret Service (GNOME Keyring, KWallet), which must be unlocked in the session where the MCP client runs.
 - **Env:** set the variable in the shell that starts the MCP client, or in the `env` section of the MCP client configuration. Never commit it to a repository.
-- The password is loaded only at the first login of the profile. An error therefore shows up when the profile is used, not at startup. `adminer-mcp check <profile>` verifies it in advance.
+- The password is loaded only at the first login of the profile. An error therefore shows up when the profile is used, not at startup. `uv run adminer-mcp check <profile>` verifies it in advance: it logs in and prints the Adminer version, the database, the user and the server version.
+- `allow_ddl = true` without `allow_write = true` is a configuration error.
 
 ## Registration in an MCP client
 
