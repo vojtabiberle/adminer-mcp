@@ -55,6 +55,9 @@ INSERT INTO big (id, label) SELECT g, 'row ' || g FROM generate_series(1, 1500) 
 
 INSERT INTO audit.log (message) VALUES ('created');
 
+-- Fixed statistics, so that estimated row counts do not depend on autovacuum timing.
+ANALYZE;
+
 -- A function that writes: the read-only session guard must stop it (ADR-0005).
 CREATE FUNCTION archive_orders() RETURNS integer LANGUAGE sql AS $$
     INSERT INTO audit.log (message) VALUES ('archived') RETURNING id;
