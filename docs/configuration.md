@@ -93,27 +93,33 @@ Other variables:
 
 ## Passwords
 
-- **Keyring:** `adminer-mcp set-password prod` asks for the password and stores it under the service `adminer-mcp`, account `prod`. On Linux this uses Secret Service (GNOME Keyring, KWallet), which must be unlocked in the session where the MCP client runs.
+- **Keyring:** `adminer-mcp set-password prod` (with `uvx --from git+https://github.com/vojtabiberle/adminer-mcp` or `uv run` in front) asks for the password and stores it under the service `adminer-mcp`, account `prod`. On Linux this uses Secret Service (GNOME Keyring, KWallet), which must be unlocked in the session where the MCP client runs.
 - **Env:** set the variable in the shell that starts the MCP client, or in the `env` section of the MCP client configuration. Never commit it to a repository.
-- The password is loaded only at the first login of the profile. An error therefore shows up when the profile is used, not at startup. `uv run adminer-mcp check <profile>` verifies it in advance: it logs in and prints the Adminer version, the database, the user and the server version.
+- The password is loaded only at the first login of the profile. An error therefore shows up when the profile is used, not at startup. `adminer-mcp check <profile>` verifies it in advance: it logs in and prints the Adminer version, the database, the user and the server version.
 - `allow_ddl = true` without `allow_write = true` is a configuration error.
 
 ## Registration in an MCP client
 
-Claude Code, user scope:
+Without a clone, `uvx` installs and runs the server from GitHub. Claude Code, user scope:
 
 ```bash
-claude mcp add adminer --scope user -- uv --directory /home/bazil/Projects/adminer-mcp run adminer-mcp
+claude mcp add adminer --scope user -- uvx --from git+https://github.com/vojtabiberle/adminer-mcp adminer-mcp
 ```
 
-Or `.mcp.json` in the project where it is used:
+From a local clone:
+
+```bash
+claude mcp add adminer --scope user -- uv --directory /path/to/adminer-mcp run adminer-mcp
+```
+
+Or `.mcp.json` in the project where it is used, here with a password from the environment of the MCP client:
 
 ```json
 {
   "mcpServers": {
     "adminer": {
-      "command": "uv",
-      "args": ["--directory", "/home/bazil/Projects/adminer-mcp", "run", "adminer-mcp"],
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/vojtabiberle/adminer-mcp", "adminer-mcp"],
       "env": {
         "ADMINER_STAGING_PASSWORD": "${ADMINER_STAGING_PASSWORD}"
       }
