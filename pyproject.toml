@@ -3,7 +3,22 @@ name = "adminer-mcp"
 version = "0.1.0"
 description = "MCP server that lets an agent work with a database through the Adminer web interface"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Vojtěch Biberle" }]
 requires-python = ">=3.12"
+keywords = ["mcp", "model-context-protocol", "adminer", "postgresql", "database", "agent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Database :: Front-Ends",
+]
 dependencies = [
     "mcp>=2.3,<3",
     "httpx>=0.28,<1",
@@ -12,6 +27,11 @@ dependencies = [
     "keyring>=25,<26",
     "pydantic>=2.14,<3",
 ]
+
+[project.urls]
+Homepage = "https://github.com/vojtabiberle/adminer-mcp"
+Documentation = "https://github.com/vojtabiberle/adminer-mcp/tree/main/docs"
+Issues = "https://github.com/vojtabiberle/adminer-mcp/issues"
 
 [project.scripts]
 adminer-mcp = "adminer_mcp.cli:main"
